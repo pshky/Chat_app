@@ -38,9 +38,7 @@ const Login = ()=>{
 
  return(
       
-  // <div class="container mx-auto px-20">
-  <div class="bg-white dark:bg-gray-800">
-  <h1 class="text-gray-900 dark:text-white">Dark mode is here!</h1>
+  <>
      <h1>Login</h1>
      
      <Formik
@@ -67,8 +65,7 @@ const Login = ()=>{
        )}
      </Formik>
      <p style={{ marginTop: '10px' }}>Dont have an account? <Link to="/signup">Signup</Link> here</p>
-   </div>
-   
+     </>
  );
 }
  export default Login;
