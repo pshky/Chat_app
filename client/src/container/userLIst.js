@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import { Skeleton } from "antd";
 
 const UserList = ()=>{
     const [userList, setUserList] = useState([])
@@ -22,11 +23,14 @@ const UserList = ()=>{
             <div className='container'>
                 <div className='userList'>
                     <h1>Current Users</h1>
-                    {userList.length > 0 ? userList.map((item)=>{
+                    {userList.length > 0 ? userList.map(user=>{
                         return(
-                            <li item={item} fetchData={fetchData}/>
+                            <li key={user.id}>{user.name}</li>
                             )
-                    }): 'list not found'}
+                    }): (
+            <Skeleton active paragraph={{ rows: 3 }} />
+            // <Skeleton />
+          )}
                 </div>
             </div>
         </section>

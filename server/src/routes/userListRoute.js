@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const Users = require('../models/users')
 const app = Router();
-const bcrypt = require('bcrypt');
 
 app.get('/userlist', async(req, res) => {
     try{
