@@ -9,9 +9,9 @@ const Dashboard = ()=>{
     return(
         <>
             <h4>Welcome, {name}</h4>
-                <li>
-                    {navigate("/userList")}
-                </li>
+                
+                    <button onClick={() => navigate("/userList")}>Fellow Users</button>
+                
         </>
     )
 }
