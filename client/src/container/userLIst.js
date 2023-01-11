@@ -4,7 +4,7 @@ const UserList = ()=>{
     const [userList, setUserList] = useState([])
 
     const fetchData = async()=>{
-        const response = await fetch("http://localhost:5000/users")
+        const response = await fetch("http://localhost:5000/userlist")
         const data = await response.json()
 
         if(data){
@@ -24,7 +24,7 @@ const UserList = ()=>{
                     <h1>Current Users</h1>
                     {userList.length > 0 ? userList.map((item)=>{
                         return(
-                            <Box item={item} fetchData={fetchData}/>
+                            <li item={item} fetchData={fetchData}/>
                             )
                     }): 'list not found'}
                 </div>

@@ -11,8 +11,10 @@ app.use(bodyParser.json())
 app.use(cors())
 const registerRouter = require('./routes/signUpRouter');
 const loginRouter = require('./routes/loginRouter');
+const userListRouter = require('./routes/userListRoute')
 app.use(registerRouter)
 app.use(loginRouter)
+app.use(userListRouter)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

@@ -4,11 +4,10 @@ import React from 'react';
  import { message } from 'antd';
  import { useDispatch, useSelector } from "react-redux"
 import {setUserDetails}  from "../reducers/userSlice"
- import { useNavigate, Link } from 'react-router-dom';
+ import { useNavigate, Link, Route, Routes } from 'react-router-dom';
 const Login = ()=>{
   const dispatch = useDispatch()
-
-
+  const navigate = useNavigate()
   const loginUser = async(values, resetForm)=>{
       const requestOptions = {
           method: "POST",
@@ -22,6 +21,7 @@ const Login = ()=>{
       if(data.msg === 'login success'){
           dispatch(setUserDetails(data.userDetails))
           message.success(data.msg)
+          navigate("/dashBoard")
       }else{
           message.error(data.msg)
       }
