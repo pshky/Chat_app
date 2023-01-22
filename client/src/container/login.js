@@ -2,6 +2,7 @@ import React from 'react';
  import { Formik, Form, Field } from 'formik';
  import * as Yup from 'yup';
  import { message } from 'antd';
+ import ShowhidePassword from "../components/showHidePassword";
  import { useDispatch, useSelector } from "react-redux"
 import {setUserDetails}  from "../reducers/userSlice"
  import { useNavigate, Link, Route, Routes } from 'react-router-dom';
@@ -39,7 +40,7 @@ const Login = ()=>{
  return(
       
   <>
-     <h1 className="text-3xl font-bold underline">Login</h1>
+     <h1>Login</h1>
      
      <Formik
        initialValues={{
@@ -52,11 +53,11 @@ const Login = ()=>{
           loginUser(values)
        }}
      >
-       {({ errors, touched }) => (
+       {({ errors, touched , values, handleChange, handleBlur, handleSubmit}) => (
          <Form>
          <Field name="email" type="email" placeholder="Enter your Email"/>
            {errors.email && touched.email ? <div>{errors.email}</div> : null}<br/>
-         <Field name="password" placeholder="Enter your password"/>
+         <Field name="password" placeholder="Enter your password" value={values.password} component={ShowhidePassword} onChange={handleChange} onBlur={handleBlur}/>
            {errors.password && touched.password ? (
              <div>{errors.password}</div>
            ) : null}<br/>
