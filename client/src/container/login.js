@@ -40,6 +40,8 @@ const Login = ()=>{
  return(
       
   <>
+    <div className='container'>
+      <div className='form'>
      <h1>Login</h1>
      
      <Formik
@@ -66,6 +68,8 @@ const Login = ()=>{
        )}
      </Formik>
      <p style={{ marginTop: '10px' }}>Dont have an account? <Link to="/signup">Signup</Link> here</p>
+     </div>
+     </div>
      </>
  );
 }

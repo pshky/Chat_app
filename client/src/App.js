@@ -7,6 +7,7 @@ import Login from './container/login'
 import SignUp from "./container/signUp";
 import Dashboard from "./container/dashBoard";
 import UserList from "./container/userList";
+import './App.css';
 const App = () =>{
   return(
     <>
