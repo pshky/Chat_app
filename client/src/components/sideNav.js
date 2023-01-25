@@ -23,23 +23,29 @@ import {
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="logo" />
           <Menu
+          onClick={({key})=>{
+            if(key === "signout"){
+              // 
+            }else{
+              navigate(key)
+            }
+          }}
             theme="light"
             mode="inline"
             defaultSelectedKeys={['1']}
             items={[
               {
-                key: '1',
+                key: '/profile',
                 icon: <UserOutlined />,
                 label: 'My Profile',
               },
               {
-                key: '2',
+                key: '/userlist',
                 icon: <VideoCameraOutlined />,
                 label: 'Fellow Users',
-                path:'userList'
               },
               {
-                key: '3',
+                key: '/messages',
                 icon: <UploadOutlined />,
                 label: 'My Messages',
               },
