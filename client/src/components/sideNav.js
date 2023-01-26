@@ -7,9 +7,9 @@ import {
   } from '@ant-design/icons';
   import { Layout, Menu, theme } from 'antd';
   import React, { useState } from 'react';
-  import { useSelector } from 'react-redux';
   import {useNavigate,Link} from "react-router-dom";
-
+  import { useSelector, useDispatch } from 'react-redux';
+  import {resetDetails} from '../reducers/userSlice'
   const { Header, Sider, Content } = Layout;
   const SideNav = () => {
     const {name} = useSelector(state=> state.user)
@@ -18,19 +18,25 @@ import {
       token: { colorBgContainer },
     } = theme.useToken();
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const logout = () => {
+      dispatch(resetDetails())
+      navigate('/')
+  }
     return (
+      
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="logo" />
           <Menu
           onClick={({key})=>{
-            if(key === "signout"){
+            if(key === "logout"){
               // 
             }else{
               navigate(key)
             }
           }}
-            theme="light"
+            theme="dark"
             mode="inline"
             defaultSelectedKeys={['1']}
             items={[
@@ -49,7 +55,13 @@ import {
                 icon: <UploadOutlined />,
                 label: 'My Messages',
               },
-            ]}
+              {
+                key: 'logout',
+                icon: <UploadOutlined />,
+                label: <button onClick={() => logout()}>Logout</button>,
+              },
+            ]
+            }
           />
         </Sider>
         <Layout className="site-layout">
