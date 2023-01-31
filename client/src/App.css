@@ -1,12 +1,23 @@
-.container{
-    max-width: 90%;
-    width: 100%;
-    margin: 0 auto
-  }
+.container {
+  max-width: 50%;
+  width: 20%;
+  margin-top: 50px;
+  margin: auto;
+  background-color: #1890ff;
+}
 
-  .form {
-    max-width: 400px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  
+.form {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+}
