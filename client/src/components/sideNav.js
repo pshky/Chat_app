@@ -38,7 +38,7 @@ const SideNav = () => {
           defaultSelectedKeys={['1']}
           items={[
             {
-              key: '/profile',
+              key: '/userlist',
               icon: <UserOutlined />,
               label: 'My Profile',
             },

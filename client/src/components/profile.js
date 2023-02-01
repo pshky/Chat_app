@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Skeleton } from "antd";
 
-const Profile = ()=>{
+const UserList = ()=>{
     const [userList, setUserList] = useState([])
 
     const fetchData = async()=>{
@@ -37,4 +37,4 @@ const Profile = ()=>{
     )
 }
 
-export default Profile
+export default UserList
