@@ -7,6 +7,7 @@ const usersSchema = new Schema({
     password:  {type:String, required: true},
     phoneNumber: {type:Number, required: true},
     country:  {type:String, required: true},
+    avatarFileName: {type:String},
   },
   { collection: 'users' });
 
