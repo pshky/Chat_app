@@ -18,5 +18,6 @@ This is a simple chat application built with MERN.
 ## Features :
 - [x] Login
 - [x] Register
+- [x] Set Avatar
 - [ ] Chat
 
