@@ -10,7 +10,11 @@ const Portfolio =()=>{
 
     const fetchUserProfileDetails = () => {
         axios.get(`${process.env.REACT_APP_BASE_URL}/profile/${_id}`)
-        .then(res=> setUserDetails(res.data.user))
+        .then(res=> {console.log(res)
+            setUserDetails(res.data.user)}
+
+        )
+    
     }
 
     const avatarupload  = async (file) => {
