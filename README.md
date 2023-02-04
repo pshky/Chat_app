@@ -9,6 +9,8 @@ This is a simple chat application built with MERN.
 - Redux
 - Redux persist for local storage
 - Bcrypt for encryption of password in node
+- Multer for File upload
+
 
 
 ----
