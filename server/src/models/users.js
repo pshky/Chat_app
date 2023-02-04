@@ -8,6 +8,7 @@ const usersSchema = new Schema({
     phoneNumber: {type:Number, required: true},
     country:  {type:String, required: true},
     avatarFileName: {type:String},
+    // userID: { type: String, required: true },
   },
   { collection: 'users' });
 

@@ -12,7 +12,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { resetDetails } from '../reducers/userSlice'
 const { Header, Sider, Content } = Layout;
 const SideNav = () => {
-  const { name } = useSelector(state => state.user)
+  const { name} = useSelector(state => state.user)
+  const {_id} = useSelector(state => state.user)
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
