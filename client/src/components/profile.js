@@ -10,12 +10,7 @@ const Portfolio =()=>{
 
     const fetchUserProfileDetails = () => {
         axios.get(`${process.env.REACT_APP_BASE_URL}/profile/${_id}`)
-        .then(res=> {console.log(res)
-            setUserDetails(res.data.user)}
-
-        )
-    
-    }
+        .then(res=>setUserDetails(res.data.user))}
 
     const avatarupload  = async (file) => {
         const formData = new FormData();
@@ -33,7 +28,7 @@ const Portfolio =()=>{
             fetchUserProfileDetails()
         }
 
-        if(data.msg === 'successfully uploaded'){
+        if(data.msg === 'avatar upload success!!'){
             message.success(data.msg)    
             setLoading(false)     
         }
@@ -42,13 +37,15 @@ const Portfolio =()=>{
    useEffect(()=>{
         fetchUserProfileDetails()
    },[])
-   
-
+   console.log("asd",userDetails.avatarFileName)
     return(
+        
         <section>
-            <div >
+        
+            <div>
                 <div className="user_profile">
                     <div className="user_img">
+                    
                         {loading?
                             <img src={require(`../../src/uploads/${userDetails.avatarFileName || 'card_img.jpg'}`)} alt="profile"  height={'100%'} width={'100%'}
                             />: <Skeleton.Avatar active size={200}/>
@@ -63,7 +60,8 @@ const Portfolio =()=>{
                     <div className="user_detail">
                     <h1>{userDetails.name}</h1>
                         <p>{userDetails.email}</p>
-                        <p>{userDetails.permanentAddress}, {userDetails.country}</p>
+                        <p>{userDetails.country}</p>
+                        <p>{userDetails.phoneNumber}</p>
                     </div>
                 </div>
             </div>

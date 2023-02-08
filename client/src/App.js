@@ -9,6 +9,7 @@ import Dashboard from "./container/dashBoard";
 import UserList from "./container/userList";
 import './App.css';
 import Portfolio from "./components/profile";
+import Chat from "./components/chat";
 const App = () =>{
   return(
     <>
@@ -19,6 +20,7 @@ const App = () =>{
         <Route exact path='/dashboard' element={<Dashboard/>}/>
         <Route exact path='/userlist' element={<UserList/>}/>
         <Route exact path='/profile' element={<Portfolio/>}/>
+        <Route exact path='/chat' element={<Chat/>}/>
       </Routes>
     
     </>

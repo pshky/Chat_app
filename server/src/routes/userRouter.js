@@ -7,6 +7,6 @@ app.post("/profile/:id", uploadMiddleWares.avatarUpload, userControllers.uploadA
 
 app.get("/profile/:id",userControllers.getUserDetails);
 
-app.put("/changepassword",userControllers.changePassword);
+// app.put("/changepassword",userControllers.changePassword);
 
 module.exports = app;
