@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { Skeleton } from "antd";
+import SideNav from '../components/sideNav';
 
 const UserList = ()=>{
     const [userList, setUserList] = useState([])
@@ -17,11 +18,14 @@ const UserList = ()=>{
     useEffect(()=>{
         fetchData()
     },[])
-
+    
     return(
+        
         <section>
-            <div className='container'>
+        
+            <div>
                 <div className='userList'>
+                
                     <h1>Current Users</h1>
                     {userList.length > 0 ? userList.map(user=>{
                         return(

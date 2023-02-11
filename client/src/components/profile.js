@@ -3,19 +3,22 @@ import { FaCamera } from "react-icons/fa";
 import axios from 'axios';
 import {useSelector} from 'react-redux'
 import { message, Skeleton } from "antd";
+import SideNav from "./sideNav";
+import card_img from "../uploads/card_img.jpg"
 const Portfolio =()=>{
     const {_id} = useSelector(state=> state.user)
     const [userDetails, setUserDetails] = useState({})
     const [loading, setLoading] = useState(true)
 
     const fetchUserProfileDetails = () => {
-        axios.get(`${process.env.REACT_APP_BASE_URL}/profile/${_id}`)
+        axios.get(`http://localhost:5000/profile/${_id}`)
         .then(res=>setUserDetails(res.data.user))}
 
+        
     const avatarupload  = async (file) => {
         const formData = new FormData();
         formData.append("avatar", file);
-        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/profile/${_id}`, {
+        const res = await fetch(`http://localhost:5000/profile/${_id}`, {
             method: "POST",
             body: formData,
         })
@@ -37,19 +40,21 @@ const Portfolio =()=>{
    useEffect(()=>{
         fetchUserProfileDetails()
    },[])
-   console.log("asd",userDetails.avatarFileName)
     return(
-        
         <section>
         
             <div>
+            
                 <div className="user_profile">
                     <div className="user_img">
                     
-                        {loading?
-                            <img src={require(`../../src/uploads/${userDetails.avatarFileName || 'card_img.jpg'}`)} alt="profile"  height={'100%'} width={'100%'}
-                            />: <Skeleton.Avatar active size={200}/>
+                        {<>
+                            
+                            <img src={`${card_img}`} alt="profile"  height={'100%'} width={'100%'}
+                            />
+                            </>
                         }
+                        
                     </div>
 
                     <div className="uploader">

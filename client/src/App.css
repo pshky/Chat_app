@@ -136,3 +136,8 @@ button.ant-drawer-close {
 span.anticon.anticon-close {
   color: #fff;
 }
+
+.home{
+  display: flex;
+  flex-flow: row wrap;
+}
