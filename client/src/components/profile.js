@@ -48,11 +48,9 @@ const Portfolio =()=>{
                 <div className="user_profile">
                     <div className="user_img">
                     
-                        {<>
-                            
-                            <img src={`${card_img}`} alt="profile"  height={'100%'} width={'100%'}
+                        {
+                            <img src={require(`../uploads/${userDetails.avatarFileName || 'card_img.jpg'}`)} alt="profile"  height={'100%'} width={'100%'}
                             />
-                            </>
                         }
                         
                     </div>

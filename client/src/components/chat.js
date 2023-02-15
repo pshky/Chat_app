@@ -1,60 +1,113 @@
-import React from 'react'
-import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import { MainContainer,ConversationList,Conversation,Avatar, ChatContainer, MessageList, Message, MessageInput } from '@chatscope/chat-ui-kit-react';
-import SideNav from './sideNav';
-import { Layout, theme } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-const { Header, Sider, Content } = Layout;
-const Chat =()=>{
-  const { name} = useSelector(state => state.user)
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+import React, { useEffect, useState } from "react";
+import ScrollToBottom from "react-scroll-to-bottom";
+function Chat({ socket,  }) {
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [messageList, setMessageList] = useState([]);
+  const [username, setUsername] = useState("");
+  const [room, setRoom] = useState("");
+  const [showChat, setShowChat] = useState(false);
+
+  const joinRoom = () => {
+    if (username !== "" && room !== "") {
+      socket.emit("join_room", room);
+      setShowChat(true);
+    }
+  };
+  const sendMessage = async () => {
+    if (currentMessage !== "") {
+      const messageData = {
+        room: room,
+        author: username,
+        message: currentMessage,
+        time:
+          new Date(Date.now()).getHours() +
+          ":" +
+          new Date(Date.now()).getMinutes(),
+      };
+
+      await socket.emit("send_message", messageData);
+      setMessageList((list) => [...list, messageData]);
+      setCurrentMessage("");
+    }
+  };
+
+  useEffect(() => {
+    console.log('dsa',socket)
+    socket.on("receive_message", (data) => {
+      console.log("dsa0",data)
+      setMessageList((list) => [...list, data]);
+    });
+  }, [socket]);
+
   return (
-    <>
-      {/* <SideNav/> */}
-    
-     <div style={{
-      height: "340px"
-    }}>
-          <ConversationList>        
-            <Conversation name="Lilly" lastSenderName="Lilly" info="Yes i can do it for you">
-              <Avatar  name="Lilly" />
-            </Conversation>
-            
-            <Conversation name="Joe" lastSenderName="Joe" info="Yes i can do it for you">
-              <Avatar  name="Joe" />
-            </Conversation>
-            
-            <Conversation name="Emily" lastSenderName="Emily" info="Yes i can do it for you">
-              <Avatar  name="Emily" />
-            </Conversation>
-            
-            <Conversation name="Kai" lastSenderName="Kai" info="Yes i can do it for you">
-              <Avatar  name="Kai" />
-            </Conversation>
-                        
-            <Conversation name="Akane" lastSenderName="Akane" info="Yes i can do it for you">
-              <Avatar  name="Akane" />
-            </Conversation>
-                                
-            <Conversation name="Eliot" lastSenderName="Eliot" info="Yes i can do it for you">
-              <Avatar  name="Eliot" />
-            </Conversation>
-                                                
-            <Conversation name="Zoe" lastSenderName="Zoe" info="Yes i can do it for you">
-              <Avatar  name="Zoe" />
-            </Conversation>
-                                                            
-            <Conversation name="Patrik" lastSenderName="Patrik" info="Yes i can do it for you">
-              <Avatar  name="Patrik" />
-            </Conversation>
-            
-          </ConversationList>
+    <div className="chat-window">
+      <div className="chat-header">
+        <p>Live Chat</p>
+      </div>
+      <div className="chat-body">
+      <div className="App">
+      {!showChat ? (
+        <div className="joinChatContainer">
+          <h3>Join A Chat</h3>
+          <input
+            type="text"
+            placeholder="John..."
+            onChange={(event) => {
+              setUsername(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Room ID..."
+            onChange={(event) => {
+              setRoom(event.target.value);
+            }}
+          />
+          <button onClick={joinRoom}>Join A Room</button>
         </div>
-        
-    </>
-  )
+      ) : (
+        <Chat socket={socket} username={username} room={room} />
+      )}
+    </div>
+        <ScrollToBottom className="message-container">
+          {messageList.map((messageContent) => {
+            return (
+              
+              <div key={`keyOf/${messageContent.message}`}
+                className="message"
+                id={username === messageContent.author ? "you" : "other"}
+              >
+                <div>
+                  <div className="message-content">
+                    <p>{messageContent.message}</p>
+                  </div>
+                  <div className="message-meta">
+                    <p id="time">{messageContent.time}</p>
+                    <p id="author">{messageContent.author}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </ScrollToBottom>
+      </div>
+      <div className="chat-footer">
+        <input
+          type="text"
+          value={currentMessage}
+          placeholder="Hey..."
+          onChange={(event) => {
+            setCurrentMessage(event.target.value);
+          }}
+          onKeyPress={(event) => {
+            event.key === "Enter" && sendMessage();
+          }}
+        />
+        <button onClick={sendMessage}>&#9658;</button>
+      </div>
+    </div>
+  );
 }
 
 export default Chat;
+

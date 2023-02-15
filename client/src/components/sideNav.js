@@ -14,6 +14,9 @@ import React, { useState } from 'react';
 import { useNavigate, Link, Routes, Route } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { resetDetails } from '../reducers/userSlice'
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:5000");
 const { Header, Sider, Content } = Layout;
 const SideNav = () => {
   const { name} = useSelector(state => state.user)
@@ -93,7 +96,7 @@ const SideNav = () => {
         {/* <Route exact path='/dashboard' element={<Dashboard/>}/> */}
         <Route exact path='/userlist' element={<UserList/>}/>
         <Route exact path='/profile' element={<Portfolio/>}/>
-        <Route exact path='/chat' element={<Chat/>}/>
+        <Route exact path='/chat' element={<Chat socket={socket}/>}/>
           </Routes>
         </Content>
       </Layout>
