@@ -22,33 +22,37 @@ app.use(cors())
 
 
 
-io.on("connection", (socket) => {
-  console.log('qwe')
-  console.log(`User Connected: ${socket.id}`);
+// io.on("connection", (socket) => {
+//   console.log('qwe')
+//   console.log(`User Connected: ${socket.id}`);
 
-  socket.on("join_room", (data) => {
-    socket.join(data);
-    console.log(`User with ID: ${socket.id} joined room: ${data}`);
-  });
+//   socket.on("join_room", (data) => {
+//     socket.join(data);
+//     console.log(`User with ID: ${socket.id} joined room: ${data}`);
+//   });
 
-  socket.on("send_message", (data) => {
-    console.log("ss",data)
-    socket.to(data.room).emit("receive_message", data);
-  });
+//   socket.on("send_message", (data) => {
+//     console.log("ss",data)
+//     socket.to(data.room).emit("receive_message", data);
+//   });
 
-  socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
-  });
-});
+//   socket.on("disconnect", () => {
+//     console.log("User Disconnected", socket.id);
+//   });
+// });
 
 const registerRouter = require('./routes/signUpRouter');
 const loginRouter = require('./routes/loginRouter');
 const userListRouter = require('./routes/userListRoute')
 const userRouter = require('./routes/userRouter')
+const conversationRouter = require('./routes/conversationRouter')
+const messagesRouter = require('./routes/messagesRouter')
 app.use(registerRouter)
 app.use(loginRouter)
 app.use(userListRouter)
 app.use(userRouter)
+app.use("/conversation",conversationRouter)
+app.use("/messages",messagesRouter)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

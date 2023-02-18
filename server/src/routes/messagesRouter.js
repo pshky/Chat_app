@@ -1,39 +1,30 @@
-const { Router } = require("express");
-const Messages = require("../models/messages");
-const app = Router();
-const isAuthorized = require("../middleware/tokenAuthorize");
+const router = require("express").Router();
+const Message = require("../models/Message");
 
-app.get("/chat-messages/:firstid/:secondid", isAuthorized, async (req, res) => {
+//add
+
+router.post("/", async (req, res) => {
+  const newMessage = new Message(req.body);
+
   try {
-    const chatMessage = await Messages.find({
-      members: { $all: [req.params.firstid, req.params.secondid] },
+    const savedMessage = await newMessage.save();
+    res.status(200).json(savedMessage);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//get
+
+router.get("/:conversationId", async (req, res) => {
+  try {
+    const messages = await Message.find({
+      conversationId: req.params.conversationId,
     });
-    if (chatMessage) {
-      res.json({
-        messages: chatMessage,
-      });
-    } else {
-      res.status(500).send(err);
-    }
+    res.status(200).json(messages);
   } catch (err) {
-    console.log(err);
+    res.status(500).json(err);
   }
 });
 
-app.post("/chat-messages", isAuthorized, async (req, res) => {
-  try {
-    const message = await Messages.create(req.body);
-    if (message) {
-      msg: "new message created";
-      res.json(message);
-    } else {
-      res.json({
-        msg: "something went wrong",
-      });
-    }
-  } catch (err) {
-    console.log(err);
-  }
-});
-
-module.exports = app;
+module.exports = router;
