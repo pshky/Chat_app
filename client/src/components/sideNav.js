@@ -1,3 +1,7 @@
+import Dashboard from "../container/dashBoard"
+import UserList from "../container/userList";
+import Portfolio from "./profile";
+import Chat from "./chat";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -7,13 +11,15 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import React, { useState } from 'react';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Routes, Route } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { resetDetails } from '../reducers/userSlice'
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:5000");
 const { Header, Sider, Content } = Layout;
 const SideNav = () => {
   const { name} = useSelector(state => state.user)
-  const {_id} = useSelector(state => state.user)
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -24,7 +30,9 @@ const SideNav = () => {
 
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
+        <div className="logo">
+          <img src={require('../uploads/card_img.jpg')}/>
+        </div>
         <Menu
           onClick={({ key }) => {
             if (key === "logout") {
@@ -41,22 +49,22 @@ const SideNav = () => {
             {
               key: '/profile',
               icon: <UserOutlined />,
-              label: 'My Profile',
+              label: <h3>My Profile</h3>,
             },
             {
               key: '/userlist',
               icon: <VideoCameraOutlined />,
-              label: 'Fellow Users',
+              label: <h3>Fellow Users</h3>,
             },
             {
-              key: '/messages',
+              key: '/chat',
               icon: <UploadOutlined />,
-              label: 'My Messages',
+              label: <h3>My Messages</h3>,
             },
             {
               key: 'logout',
               icon: <UploadOutlined />,
-              label: 'Logout',
+              label: <h3>Logout</h3>,
             },
           ]
           }
@@ -76,13 +84,20 @@ const SideNav = () => {
         </Header>
         <Content
           style={{
-            margin: '24px 16px',
+            margin: '20px 20px',
             padding: 24,
-            minHeight: 280,
+            minHeight: 525,
             background: colorBgContainer,
           }}
         >
-          <h4>Welcome, {name}</h4>
+          {/* <h3>Welcome, {name}</h3> */}
+          <Routes>
+          {/* <Route exact path='/' element={<Login/>}/> */}
+        {/* <Route exact path='/dashboard' element={<Dashboard/>}/> */}
+        <Route exact path='/userlist' element={<UserList/>}/>
+        <Route exact path='/profile' element={<Portfolio/>}/>
+        <Route exact path='/chat' element={<Chat socket={socket}/>}/>
+          </Routes>
         </Content>
       </Layout>
     </Layout>

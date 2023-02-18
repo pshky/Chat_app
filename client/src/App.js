@@ -1,28 +1,20 @@
-import {
-	BrowserRouter as Router,
-	Routes,
-	Route,
- } from "react-router-dom";
-import Login from './container/login'
-import SignUp from "./container/signUp";
-import Dashboard from "./container/dashBoard";
-import UserList from "./container/userList";
+
+import Routers from "./components/routes";
 import './App.css';
-import Portfolio from "./components/profile";
+import SideNav from "./components/sideNav";
+// import io from "socket.io-client";
+
+// const socket = io.connect("http://localhost:3000");
 const App = () =>{
+  
   return(
     <>
-    
-      <Routes>
-        <Route exact path='/' element={<Login/>}/>
-        <Route exact path='/signup' element={<SignUp/>}/>
-        <Route exact path='/dashboard' element={<Dashboard/>}/>
-        <Route exact path='/userlist' element={<UserList/>}/>
-        <Route exact path='/profile' element={<Portfolio/>}/>
-      </Routes>
-    
+      
+      <Routers/>
+      <SideNav/>
     </>
   )
 }
+
 
 export default App
