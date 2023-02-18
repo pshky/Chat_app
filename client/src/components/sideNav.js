@@ -96,7 +96,7 @@ const SideNav = () => {
         {/* <Route exact path='/dashboard' element={<Dashboard/>}/> */}
         <Route exact path='/userlist' element={<UserList/>}/>
         <Route exact path='/profile' element={<Portfolio/>}/>
-        <Route exact path='/chat' element={<Chat socket={socket}/>}/>
+        <Route exact path='/chat' element={<Chat/>}/>
           </Routes>
         </Content>
       </Layout>

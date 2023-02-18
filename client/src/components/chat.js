@@ -6,7 +6,6 @@ function Chat({ socket,  }) {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
-
   const joinRoom = () => {
     if (username !== "" && room !== "") {
       socket.emit("join_room", room);
@@ -32,9 +31,7 @@ function Chat({ socket,  }) {
   };
 
   useEffect(() => {
-    console.log('dsa',socket)
     socket.on("receive_message", (data) => {
-      console.log("dsa0",data)
       setMessageList((list) => [...list, data]);
     });
   }, [socket]);
@@ -110,4 +107,3 @@ function Chat({ socket,  }) {
 }
 
 export default Chat;
-
