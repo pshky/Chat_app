@@ -17,39 +17,64 @@ const bodyParser = require('body-parser')
 const connect = require('./db/connect')
 connect()
 
+
+
+
+let users = [];
+
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
+io.on("connection", (socket) => {
+  //when ceonnect
+  console.log("a user connected.");
+
+  //take userId and socketId from user
+  socket.on("addUser", (userId) => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
+  });
+
+  //send and get message
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
+    io.to(user.socketId).emit("getMessage", {
+      senderId,
+      text,
+    });
+  });
+
+  //when disconnect
+  socket.on("disconnect", () => {
+    console.log("a user disconnected!");
+    removeUser(socket.id);
+    io.emit("getUsers", users);
+  });
+});
 app.use(bodyParser.json())
 app.use(cors())
-
 const registerRouter = require('./routes/signUpRouter');
 const loginRouter = require('./routes/loginRouter');
 const userListRouter = require('./routes/userListRoute')
 const userRouter = require('./routes/userRouter')
-const messagesRouter = require("./routes/messagesRouter");
+const conversationRouter = require('./routes/conversationRouter')
+const messagesRouter = require('./routes/messagesRouter')
 app.use(registerRouter)
 app.use(loginRouter)
 app.use(userListRouter)
 app.use(userRouter)
-app.use(messagesRouter);
-
-io.on("connection", (socket) => {
-  console.log('qwe')
-  console.log(`User Connected: ${socket.id}`);
-
-  socket.on("join_room", (data) => {
-    socket.join(data);
-    console.log(`User with ID: ${socket.id} joined room: ${data}`);
-  });
-
-  socket.on("send_message", (data) => {
-    console.log("ss",data)
-    socket.to(data.room).emit("receive_message", data);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
-  });
-});
-
+app.use("/conversation",conversationRouter)
+app.use("/messages",messagesRouter)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

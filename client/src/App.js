@@ -1,20 +1,18 @@
-
-import Routers from "./components/routes";
-import './App.css';
-import SideNav from "./components/sideNav";
-// import io from "socket.io-client";
-
-// const socket = io.connect("http://localhost:3000");
-const App = () =>{
-  
-  return(
-    <>
-      
-      <Routers/>
-      <SideNav/>
-    </>
-  )
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SetAvatar from "./components/SetAvatar";
+import Chat from "./pages/Chat";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/setAvatar" element={<SetAvatar />} />
+        <Route path="/" element={<Chat />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-
-export default App
