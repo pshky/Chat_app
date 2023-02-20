@@ -1,7 +1,7 @@
 import Dashboard from "../container/dashBoard"
 import UserList from "../container/userList";
 import Portfolio from "./profile";
-import Chat from "./chat";
+import Chat from "../container/chat";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -15,6 +15,7 @@ import { useNavigate, Link, Routes, Route } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { resetDetails } from '../reducers/userSlice'
 import io from "socket.io-client";
+
 
 const socket = io.connect("http://localhost:5000");
 const { Header, Sider, Content } = Layout;
