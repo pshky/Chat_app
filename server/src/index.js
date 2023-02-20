@@ -1,80 +1,51 @@
-const app = require('express')()
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/auth");
+const messageRoutes = require("./routes/messages");
+const app = express();
+const socket = require("socket.io");
+require("dotenv").config();
 
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io")
+app.use(cors());
+app.use(express.json());
 
-const io = new Server(server, {
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("DB Connetion Successfull");
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+
+const server = app.listen(process.env.PORT, () =>
+  console.log(`Server started on ${process.env.PORT}`)
+);
+const io = socket(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  }
+    origin: "http://localhost:3000",
+    credentials: true,
+  },
 });
-require('dotenv').config()
-const port = process.env.PORT
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const connect = require('./db/connect')
-connect()
 
-
-
-
-let users = [];
-
-const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
-};
-
-const removeUser = (socketId) => {
-  users = users.filter((user) => user.socketId !== socketId);
-};
-
-const getUser = (userId) => {
-  return users.find((user) => user.userId === userId);
-};
-
+global.onlineUsers = new Map();
 io.on("connection", (socket) => {
-  //when ceonnect
-  console.log("a user connected.");
-
-  //take userId and socketId from user
-  socket.on("addUser", (userId) => {
-    addUser(userId, socket.id);
-    io.emit("getUsers", users);
+  global.chatSocket = socket;
+  socket.on("add-user", (userId) => {
+    onlineUsers.set(userId, socket.id);
   });
 
-  //send and get message
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-    const user = getUser(receiverId);
-    io.to(user.socketId).emit("getMessage", {
-      senderId,
-      text,
-    });
-  });
-
-  //when disconnect
-  socket.on("disconnect", () => {
-    console.log("a user disconnected!");
-    removeUser(socket.id);
-    io.emit("getUsers", users);
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(data.to);
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+    }
   });
 });
-app.use(bodyParser.json())
-app.use(cors())
-const registerRouter = require('./routes/signUpRouter');
-const loginRouter = require('./routes/loginRouter');
-const userListRouter = require('./routes/userListRoute')
-const userRouter = require('./routes/userRouter')
-const conversationRouter = require('./routes/conversationRouter')
-const messagesRouter = require('./routes/messagesRouter')
-app.use(registerRouter)
-app.use(loginRouter)
-app.use(userListRouter)
-app.use(userRouter)
-app.use("/conversation",conversationRouter)
-app.use("/messages",messagesRouter)
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})

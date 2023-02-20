@@ -1,63 +1,85 @@
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const Users = require("../models/users");
+const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
 
-const uploadAvatar = async (req, res, next) => {
-    try {
-      const data = await Users.findByIdAndUpdate(
-        { _id: req.params.id },
-        { avatarFileName: req.file.originalname }
-      );
-      if (data) {
-        res.json({
-          msg: "avatar upload success!!",
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
+module.exports.login = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (!user)
+      return res.json({ msg: "Incorrect Username or Password", status: false });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid)
+      return res.json({ msg: "Incorrect Username or Password", status: false });
+    delete user.password;
+    return res.json({ status: true, user });
+  } catch (ex) {
+    next(ex);
   }
-  
-const getUserDetails =  async (req, res) => {
-    try {
-      const userData = await Users.findById(req.params.id)
-      const {password, __v, ...refactoredData} = userData.toObject()
-     
-      res.json({
-        user: refactoredData,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  
-// const changePassword = async (req, res, next) => {
-//     try {
-//       const data = await Users.findOne({ email: req.body.email });
-//       const dbPassword = data.password;
-//       const isValidPassword = bcrypt.compareSync( req.body.currentPassword, dbPassword);
-  
-//       if (req.body.newPassword && isValidPassword) {
-//         const salt = bcrypt.genSaltSync(saltRounds);
-//         const hash = bcrypt.hashSync(req.body.newPassword, salt);
-//         if (hash) {
-//           data.password = hash;
-//           const response = await Users.findByIdAndUpdate(data._id, data);
-//           if (response) {
-//             res.status(200).json({ msg: "Password Updated" });
-//           } else {
-//             res.status(500).json({ msg: "something went wrong" });
-//           }
-//         }
-//       } else {
-//         res.status(401).json({ msg: "Old Password doesn't matched" });
-//       }
-//       next();
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
+};
 
-exports.uploadAvatar = uploadAvatar;
-exports.getUserDetails = getUserDetails;
-// exports.changePassword = changePassword;
+module.exports.register = async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body;
+    const usernameCheck = await User.findOne({ username });
+    if (usernameCheck)
+      return res.json({ msg: "Username already used", status: false });
+    const emailCheck = await User.findOne({ email });
+    if (emailCheck)
+      return res.json({ msg: "Email already used", status: false });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      email,
+      username,
+      password: hashedPassword,
+    });
+    delete user.password;
+    return res.json({ status: true, user });
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+module.exports.getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({ _id: { $ne: req.params.id } }).select([
+      "email",
+      "username",
+      "avatarImage",
+      "_id",
+    ]);
+    return res.json(users);
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+module.exports.setAvatar = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const avatarImage = req.body.image;
+    const userData = await User.findByIdAndUpdate(
+      userId,
+      {
+        isAvatarImageSet: true,
+        avatarImage,
+      },
+      { new: true }
+    );
+    return res.json({
+      isSet: userData.isAvatarImageSet,
+      image: userData.avatarImage,
+    });
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+module.exports.logOut = (req, res, next) => {
+  try {
+    if (!req.params.id) return res.json({ msg: "User id is required " });
+    onlineUsers.delete(req.params.id);
+    return res.status(200).send();
+  } catch (ex) {
+    next(ex);
+  }
+};
