@@ -6,10 +6,7 @@ This is a simple chat application built with MERN.
 - Express js
 - mongoDb
 - Node js
-- Redux
-- Redux persist for local storage
 - Bcrypt for encryption of password in node
-- Multer for File upload
 
 
 
@@ -19,5 +16,5 @@ This is a simple chat application built with MERN.
 - [x] Login
 - [x] Register
 - [x] Set Avatar
-- [ ] Chat
+- [X] Chat
 
